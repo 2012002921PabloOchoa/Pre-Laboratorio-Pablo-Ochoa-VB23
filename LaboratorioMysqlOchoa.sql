@@ -1,0 +1,145 @@
+CREATE DATABASE empresafixoSA1;
+USE empresafixoSA1;
+
+CREATE TABLE direccion (
+    idDireccion INT PRIMARY KEY,
+    Direccion VARCHAR(45),
+    Ciudad VARCHAR(45),
+    Pais VARCHAR(45)
+);
+
+insert into direccion(idDireccion,Direccion,Ciudad,Pais)
+values
+(1,"6a Avenida 3-55 Zona 10","Guatemala","Guatemala"),
+(2,"Avenida Las Américas 16-30 Zona 13","Guatemala","Guatemala"),
+(3,"4a Calle 7-65 Zona 1 "," Antigua Guatemala","Guatemala"),
+(4,"Boulevard Liberación 15-70 ","Guatemala","Guatemala"),
+(5,"Calzada Roosevelt 22-43 Zona 7","Guatemala","Guatemala");
+
+CREATE TABLE cliente (
+    idCliente INT PRIMARY KEY,
+    Nombre VARCHAR(45),
+    Apellido VARCHAR(45),
+    Edad INT,
+    Direccion_idDireccion INT,
+    FOREIGN KEY (Direccion_idDireccion) REFERENCES direccion(idDireccion)
+);
+
+insert into cliente(idCliente,Nombre,Apellido,Edad,Direccion_idDireccion)
+values
+(1,"Juliana ","Pérez",25,1),
+(2,"María","González",32,2),
+(3,"Juliana","Ochoa",28,3),
+(4,"Sofía","Martínez",22,4),
+(5,"José","Hernández",30,5);
+
+CREATE TABLE categoria (
+    idCategoria INT PRIMARY KEY,
+    Nombre VARCHAR(45)
+);
+
+insert into categoria(idCategoria,Nombre)
+values
+(1,"Acción"),
+(2,"Drama"),
+(3,"Comedia"),
+(4,"Terror"),
+(5,"Animación");
+
+CREATE TABLE peliculas (
+    idPeliculas INT PRIMARY KEY,
+    Nombre VARCHAR(45),
+    Duracion INT,
+    Descripcion TEXT,
+    Año INT,
+    Categoria_idCategoria INT,
+    FOREIGN KEY (Categoria_idCategoria) REFERENCES categoria(idCategoria)
+);
+
+insert into peliculas(idPeliculas,Nombre,Duracion,Descripcion,Año,Categoria_idCategoria)
+values
+(1, "pokemon1", 120, "Ash y Pikachu viven una nueva aventura para salvar el mundo", 2000, 5),
+(2, "Avengers", 180, "Los superhéroes se unen para luchar contra Thanos.", 2019, 1),
+(3, "Titanic", 195, "Una historia de amor épica en el trágico hundimiento del Titanic.", 1997, 2),
+(4, "pokemon1", 110, "Un nuevo villano amenaza el mundo Pokémon, y Ash debe detenerlo.", 2002, 5),
+(5, "Shrek", 90, "Un ogro verde emprende una misión para rescatar a una princesa.", 2001, 3);
+
+
+CREATE TABLE inventario (
+    idCopiasPeliculas INT PRIMARY KEY,
+    Peliculas_idPeliculas INT,
+    Disponible TINYINT,
+    FOREIGN KEY (Peliculas_idPeliculas) REFERENCES peliculas(idPeliculas)
+);
+
+insert into inventario(idCopiasPeliculas,Peliculas_idPeliculas,Disponible)
+values
+(1, 1, 1),
+(2, 2, 1),
+(3, 3, 0),
+(4, 4, 1),
+(5, 5, 1);
+
+CREATE TABLE renta (
+    idRenta INT PRIMARY KEY,
+    Fecha_Renta DATE,
+    Fecha_Entrega DATE,
+    Inventario_idCopiasPeliculas INT,
+    Cliente_idCliente INT,
+    FOREIGN KEY (Inventario_idCopiasPeliculas) REFERENCES inventario(idCopiasPeliculas),
+    FOREIGN KEY (Cliente_idCliente) REFERENCES cliente(idCliente)
+);
+
+insert into renta(idRenta,Fecha_Renta,Fecha_Entrega,Inventario_idCopiasPeliculas,Cliente_idCliente)
+values
+(1, "2025-04-10", "2025-04-17", 1, 1),
+(2, "2025-04-12", "2025-04-19", 2, 2),
+(3, "2025-04-14", "2025-04-21", 4, 3),
+(4, "2025-04-16", "2025-04-23", 3, 4),
+(5, "2025-04-18", "2025-04-25", 4, 5);
+
+CREATE TABLE empleado (
+    idEmpleado INT PRIMARY KEY,
+    Nombre VARCHAR(45),
+    Apellido VARCHAR(45),
+    Cargo VARCHAR(45),
+    Fecha_Contratacion DATE,
+    Telefono VARCHAR(20)
+);
+
+insert into empleado(idEmpleado,Nombre,Apellido,Cargo,Fecha_Contratacion,Telefono)
+values
+(1, "Sebastián", "López", "Supervisor de Ventas", "2018-06-12", "55667788"),
+(2, "Valeria", "Morales", "Recepcionista", "2020-09-25", "44556677"),
+(3, "Tomás", "Méndez", "Soporte Técnico", "2021-03-18", "33445566"),
+(4, "Isabela", "Cruz", "Coordinador de Logística", "2019-12-05", "22334455"),
+(5, "Diego", "Vargas", "Asistente Administrativo", "2023-01-20", "11223344");
+
+CREATE TABLE reserva (
+    idReserva INT PRIMARY KEY,
+    Fecha_Reserva DATE,
+    Cliente_idCliente INT,
+    Inventario_idCopiasPeliculas INT,
+    FOREIGN KEY (Cliente_idCliente) REFERENCES cliente(idCliente),
+    FOREIGN KEY (Inventario_idCopiasPeliculas) REFERENCES inventario(idCopiasPeliculas)
+);
+
+insert into reserva(idReserva,Fecha_Reserva,Cliente_idCliente,Inventario_idCopiasPeliculas)
+values
+(1, "2025-04-15", 1, 3),
+(2, "2025-04-19", 2, 1),
+(3, "2025-04-24", 3, 4),
+(4, "2025-05-08", 4, 2),
+(5, "2025-07-22", 5, 5);
+
+select * from direccion;
+select * from cliente;
+select * from cliente where Nombre = "Juliana";
+select * from categoria order by Nombre asc;
+select * from peliculas;
+select * from peliculas order by Año desc;
+select * from inventario;
+select * from renta;
+select * from empleado;
+select * from reserva;
+select * from peliculas where not Nombre = "pokemon1";
